@@ -64,11 +64,10 @@ pip install gluonnlp kss sklearn konlpy sentencepiece seqeval setproctitle soynl
 
 ---
 
-한국어 말뭉치는 _[위키미디어 다운로드](https://dumps.wikimedia.org/kowiki/)_ 에서 다운받을 수 있으며, 여기에선 "kowiki-20220201-pages-articles.xml.bz2" 데이터를 사용합니다.
+한국어 말뭉치는 _[위키미디어 다운로드](https://dumps.wikimedia.org/kowiki/)_ 에서 다운받을 수 있으며, 원하는 데이터로(ex:) kowiki-20221101-pages-articles.xml.bz2) 변경해도 됩니다.
 
-자료는 [cchyun](https://paul-hyun.github.io/vocab-with-sentencepiece/) 님의 자료를 참고하였습니다. :)
+[cchyun](https://paul-hyun.github.io/vocab-with-sentencepiece/) 님의 자료를 참고하였으며, 해당 파일에서 kowiki.py를 실행하면 가장 최근 kowiki 데이터로 다운받아 전처리합니다.
 
-여기서 **pages-articles.xml.bz2** 파일을 다운받아서 전처리 해야하는데, [cchyun](https://paul-hyun.github.io/about) 님의 web-crawler 를 사용해서 처리했습니다. (위키데이터 라인 별 .txt 문장으로 만들어 전처리)
 
 ```
 git clone https://github.com/paul-hyun/web-crawler.git
@@ -82,17 +81,41 @@ pip install pymongo
 python kowiki.py
 ```
 
-위 소스에서 filename 변수만 다운받은 위키데이터로 변경합니다.
-
-```
-filename = "kowiki-20220201-pages-articles.xml.bz2"
-```
-
-위 명령어를 실행하면 kowiki에 실제 wiki 데이터 형식는 다음과 같이 되어있으며, 이 중 “text”: 에 해당하는 부분을 가져옵니다.
+kowiki에 데이터 형식는 다음과 같이 되어있으며, 이 중 “text”: 에 해당하는 부분을 가져오는 것입니다.
 
 ```
 {"id": "5", "url": "https://ko.wikipedia.org/wiki?curid=5", "title": "지미 카터", "text": "지미 카터\n\n제임스 얼 카터 주니어(, 1924년 10월 1일 ~ )는 ... 별명이 붙기도 했다.\n\n\n\n"}
 ```
+
+아래 과정은 csv_to_txt 를 수행합니다.
+
+```
+import csv, sys
+import pandas as pd
+
+def csv_to_text():
+
+        in_file = './kowiki/kowiki_20221108.csv'
+        out_file = './kowiki/corpus.txt'
+
+        csv.field_size_limit(sys.maxsize)
+
+        SEPARATOR = u"\u241D"
+        df = pd.read_csv(in_file, sep=SEPARATOR, engine='python')
+
+        with open(out_file, "w") as f:
+                for index, row in df.iterrows():
+                        # print(row["text"].split('\n')[1:])
+                        sentences = row["text"].split('\n')[1:] # 여기서 첫 \n 앞에 있는 명사는 필요없으므로 제거 후 추출
+                        for sent in sentences:
+                                f.write(sent)   # title 과 text를 중복 되므로 text만 저장
+                                f.write("\n")   # 구분자
+
+csv_to_text()
+
+
+```
+
 
 
 2-1. SPM build
