@@ -83,15 +83,16 @@ python kowiki.py
 ```
 
 위 소스에서 filename 변수만 다운받은 위키데이터로 변경합니다.
+
 ```
 filename = "kowiki-20220201-pages-articles.xml.bz2"
 ```
 
 위 명령어를 실행하면 kowiki에 실제 wiki 데이터 형식는 다음과 같이 되어있으며, 이 중 “text”: 에 해당하는 부분을 가져옵니다.
+
 ```
 {"id": "5", "url": "https://ko.wikipedia.org/wiki?curid=5", "title": "지미 카터", "text": "지미 카터\n\n제임스 얼 카터 주니어(, 1924년 10월 1일 ~ )는 ... 별명이 붙기도 했다.\n\n\n\n"}
 ```
-
 
 
 2-1. SPM build
