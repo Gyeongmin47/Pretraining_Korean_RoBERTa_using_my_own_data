@@ -4,6 +4,34 @@ import pickle
 
 import sentencepiece as spm
 from unicodedata import normalize
+from sklearn.model_selection import train_test_split
+
+
+def clean_text(input_file, output_file):
+
+    with open(input_file, 'r', encoding='utf-8') as f_r:
+        with open(output_file + 'train.txt', 'w', encoding='utf-8') as f_w_tr:
+            with open(output_file + 'valid.txt', "w", encoding='utf-8') as f_w_v:
+                with open(output_file + 'test.txt', "w", encoding='utf-8') as f_w_te:
+                    dataset = f_r.readlines()
+
+                    train, _valid = train_test_split(dataset, test_size=0.2, random_state=42, shuffle=True)
+                    valid, test = train_test_split(_valid, test_size=0.5, random_state=42, shuffle=True)
+
+                    for i, sent in enumerate(train):
+                        sent = sent.strip()
+                        f_w_tr.write(sent)
+                        f_w_tr.write("\n")
+
+                    for i, sent in enumerate(valid):
+                        sent = sent.strip()
+                        f_w_v.write(sent)
+                        f_w_v.write("\n")
+
+                    for i, sent in enumerate(test):
+                        sent = sent.strip()
+                        f_w_te.write(sent)
+                        f_w_te.write("\n")
 
 def check_dir(dir):
     cur_dir = ''
@@ -25,28 +53,31 @@ def save_vocab(vocab: dict, output_dir):
         f.write(reverse_vocab[i] + '\n')
     print("Done!")
 
+
+# -*- coding: utf-8 -*-
+
+
 def train_spm(
-        vocab_size=52000,
+        vocab_size=32000,
         character_coverage=0.9995,
-        # absolute path = "/mnt/raid6/totoro4007/myrepo/sentencepiece_model/web-crawler/corpus/corpus.txt"
-        data_dir='web-crawler/corpus/corpus.txt',
-        # absolute path = "/mnt/raid6/totoro4007/myrepo/sentencepiece_model/spm_model"
-        output_dir='spm_model',
-        tokenization_type='original',
+        # input path = "<set your path>/web-crawler/kowiki/corpus.txt"
+        data_dir='web-crawler/kowiki/corpus.txt',
+        # output path = "<set output path>/spm_model"
+        output_dir='./spm_model',
         control_symbols="[PAD],[CLS],[SEP]",
         user_defined_symbols="[MASK]",
-        mode_sub_char=False,
 ):
     check_dir(output_dir)
 
-    if mode_sub_char:
-        # sub-char인 경우, "identity" option으로 둔다. Corpus가 이미 NFKD normalize 되어있음.
-        normalization_rule_name = "identity"
-    else:
-        # See: https://github.com/google/sentencepiece/blob/master/doc/normalization.md
-        normalization_rule_name = "nmt_nfkc"  # Default spm normalization rule is 'nmt-nfkc'
+    input_file = "web-crawler/kowiki/corpus.txt"
+    output_file = "web-crawler/kowiki/corpus_"
 
-    model_prefix = tokenization_type + '-spm'
+    clean_text(input_file, output_file)
+
+    # See: https://github.com/google/sentencepiece/blob/master/doc/normalization.md
+    normalization_rule_name = "nmt_nfkc"  # Default spm normalization rule is 'nmt-nfkc'
+
+    model_prefix = 'spm'
     output_dir = os.path.join(output_dir, model_prefix)
 
     spm.SentencePieceTrainer.Train(
