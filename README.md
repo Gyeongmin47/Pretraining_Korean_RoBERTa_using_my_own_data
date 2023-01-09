@@ -1,8 +1,8 @@
 # KoRoBERTa - Pretraining KoRoBERTa using your own data
 
-BERT, ELECTRA 는 한국어로 사전학습한 모델이 많지만, [RoBERTa](https://arxiv.org/pdf/1907.11692.pdf) 는 아직까지도 KLUE를 제외하곤 공개된 한국어 모델이 없는것 같습니다 :)
+BERT, ELECTRA 는 한국어로 사전학습한 모델이 많지만 [RoBERTa](https://arxiv.org/pdf/1907.11692.pdf) 는 아직까지도 KLUE를 제외하곤 공개된 한국어 모델이 없는것 같습니다 :)
 
-RoBERTa-base 모델을 기준으로 했으며, 데이터를 전처리하는 from scratch 부터 사전학습하는 모든 과정을 공개합니다.
+RoBERTa-base 모델을 기준으로 했으며 데이터를 전처리하는 from scratch 부터 사전학습하는 모든 과정을 공개합니다.
 
 (facebook의 [Pretraining RoBERTa using your own data](https://github.com/facebookresearch/fairseq/blob/main/examples/roberta/README.pretraining.md) 를 토대로 한국어에 맞게 최적화하여 작성하는 점 참고해주세요.)
 
@@ -20,7 +20,7 @@ KoRoBERTa는 약 **750MB의 한국어 text**로 [Sentencepiece](https://github.c
 ## 1. Fairseq Environment Setup for RoBERTa
 
 
-우선 환경 세팅을 먼저 진행합니다. Conda를 설치하고, 본인의 GPU 환경에 맞게 세팅합니다.
+우선 환경 세팅을 먼저 진행합니다. Conda를 설치하고 본인의 GPU 환경에 맞게 세팅합니다.
 
 ---
 1-1. Conda & CUDA Setup
@@ -46,7 +46,7 @@ pip install gluonnlp kss sklearn konlpy sentencepiece seqeval setproctitle soynl
 3. pip install --editable ./
 ```
 
-4. Apex 설치 (시간이 꽤 소요되며, [apex](https://github.com/NVIDIA/apex) 사이트에서도 동일하게 받을 수 있습니다.)
+4. Apex 설치 (시간이 꽤 소요되며 [apex](https://github.com/NVIDIA/apex) 사이트에서도 동일하게 받을 수 있습니다.)
 
 ```
 # apex 사이트 참고
